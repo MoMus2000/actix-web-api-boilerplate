@@ -31,13 +31,16 @@ DB_NAME="${POSTGRES_DB:=newsletter}"
 DB_PORT="${POSTGRES_PORT:=5432}"
 
 # Launch postgres using Docker
-docker run \
--e POSTGRES_USER=${DB_USER} \
--e POSTGRES_PASSWORD=${DB_PASSWORD} \
--e POSTGRES_DB=${DB_NAME} \
--p "${DB_PORT}":5432 \
--d postgres \
-postgres -N 1000
+if [[ -z "${SKIP_DOCKER}" ]]
+then
+    docker run \
+    -e POSTGRES_USER=${DB_USER} \
+    -e POSTGRES_PASSWORD=${DB_PASSWORD} \
+    -e POSTGRES_DB=${DB_NAME} \
+    -p "${DB_PORT}":5432 \
+    -d postgres \
+    postgres -N 1000
+fi
 # ^ Increased maxi
 
 # Keep pinging Postgres until it's ready to accept commands
@@ -49,7 +52,8 @@ done
 >&2 echo "Postgres is up and running on port ${DB_PORT}!"
 export DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@localhost:${DB_PORT}/${DB_NAME}
 sqlx database create
-
 # sqlx migrate add create_subscriptions_table # Run ad-hoc
 # put the sql in the folder - then
-# sqlx migrate run
+sqlx migrate run
+
+>&2 echo "Postgres has been migrated, ready to go!"
