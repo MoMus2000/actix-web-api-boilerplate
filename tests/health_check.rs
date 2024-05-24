@@ -3,7 +3,7 @@ mod utils;
 #[actix_rt::test]
 async fn health_check_works() {
     // Arrange
-    let address = utils::spawn_app();
+    let address = utils::spawn_app().await;
     let client = reqwest::Client::new();
     // Act
     let response = client
