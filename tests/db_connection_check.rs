@@ -9,8 +9,6 @@ async fn check_db_connection(){
 
     eprintln!("Connection String : {}", connection_string);
 
-    // The `Connection` trait MUST be in scope for us to invoke
-    // `PgConnection::connect` - it is not an inherent method of the struct!
     let _ = PgConnection::connect(&connection_string)
     .await
     .expect("Failed to connect to Postgres.");

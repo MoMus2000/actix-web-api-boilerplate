@@ -1,6 +1,8 @@
+#![allow(dead_code)]
+
 use email_service::run;
 use email_service::configuration;
-use sqlx::{Connection, PgConnection};
+use sqlx::PgPool;
 use std::net::*;
 
 pub async fn spawn_app() -> String {
@@ -11,7 +13,7 @@ pub async fn spawn_app() -> String {
     let config = configuration::get_configuration().unwrap();
     println!("Configuration : {:?}", config);
     let configuration = configuration::get_configuration().expect("Failed to read configuration.");
-    let connection = PgConnection::connect(&configuration.database.connection_string()).await.unwrap();
+    let connection = PgPool::connect(&configuration.database.connection_string()).await.unwrap();
     let server = run(listener, connection).expect("Failed to bind address");
     let _ = tokio::spawn(server);
     // We return the application address to the caller!
