@@ -15,7 +15,9 @@ name = "email_service"
 [dependencies]
 actix-rt = "2.9.0"
 actix-web = "4.6.0"
+config = "0.14.0"
 reqwest = "0.12.4"
+serde = "1.0.202"
 tokio = "1.37.0"
 
 [dependencies.sqlx]

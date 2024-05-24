@@ -1,7 +1,7 @@
 use actix_web::*;
 use std::net::*;
 
-use email_service::run;
+use email_service::{configuration, run};
 
 async fn hello_world(req: HttpRequest) -> impl Responder{
     let name = req.match_info().get("name").unwrap_or("World");
@@ -17,5 +17,7 @@ async fn hello_world_post(req: HttpRequest) -> impl Responder{
 pub async fn main() -> std::io::Result<()> {
     let listener = TcpListener::bind("127.0.0.1:8000")
         .expect("Failed to bind port 8000");
+    let config = configuration::get_configuration().unwrap();
+    println!("Configuration : {:?}", config);
     run(listener)?.await
 }

@@ -1,3 +1,5 @@
+pub mod configuration;
+
 use std::net::TcpListener;
 
 use actix_web::{web, App, HttpResponse, HttpServer};
